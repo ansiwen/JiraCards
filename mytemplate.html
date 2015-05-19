@@ -1,0 +1,199 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+    <title>Jira Cards</title>
+
+    <style type="text/css">
+        body {
+            font-family: Arial, sans-serif;
+            background: none;
+            color: black;
+        }
+
+        #page-container {
+            display: block;
+            width: 706px;
+            margin: 0; padding: 0;
+            background: none;
+        }
+
+        .page:first-child {
+            clear: both;
+        }
+
+        .page:not(:first-child) {
+            page-break-before: always;
+            clear: both;
+        }
+
+        .ticket-item {
+            position: relative;
+            float: left;
+            height: 308px;
+            width: 330px;
+            overflow: hidden;
+            margin: auto;
+            background-color: #FFF;
+            border: 4px solid rgba(255, 0, 0, 1.0);
+            border-radius: 5px 5px 5px 5px;
+            margin-left: 15px;
+            margin-bottom: 12px;
+            margin-top: 17px;
+            page-break-before : right;
+        }
+
+        .header {
+            display: block;
+            position: relative;
+            background-color: #000000;
+            height: 30px;
+        }
+
+        .title {
+            float: left;
+/*            width: 180px;*/
+            padding-left: 10px;
+            padding-top: 1px;
+            color: #FFF;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .ticket-type {
+            float: right;
+            position: relative;
+            margin-top: 4px;
+            margin-right: 10px;
+/*            font-size: 14px;*/
+            color: #FFF;
+        }
+
+        .summary {
+            float: left;
+            width: 210px;
+            padding: 15px;
+        }
+
+        .summary-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: #000;
+        }
+        .description {
+            font-size: 10px;
+/*            word-wrap: break-word;*/
+            white-space: pre-wrap;
+            color: #000;
+        }
+
+        .sidebar-container {
+            position: relative;
+            display: inline-block;
+            float: right;
+            width: 80px;
+            min-height: 280px;
+            background-color: #FFF;
+        }
+
+        .sidebar-box {
+            height: 140px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            color: #FFF;
+            padding-top: 10px;
+        }
+        
+        .sidebar-points {
+            font-size: 32px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .dod-header {
+            font-size: 16px;
+            font-weight: bold;
+            color: #FFF;
+            text-align: center;
+        }
+
+        .dod-item {
+            display: inline-block;
+            width: 80px;
+            height: 20px;
+        }
+
+        .dod-box {
+            display: inline-block;
+            margin-left: 5px;
+            height: 15px;
+            width: 15px;
+            background-color: #FFF;
+        }
+
+        .dod-text {
+            display: inline-block;
+            position: relative;
+            font-size: 11px;
+            font-weight: bold;
+            color: #FFF;
+            margin-bottom: 4px;
+        }
+        </style>
+</head>
+<body>
+    <div id="page-container">
+        {% for row in tickets | batch(6) %}
+            <div class="page">
+            {% for ticket in row %}
+                <div class="ticket-item" style="border-color: {{ ticket.cardcolor }}">
+                    <div class="header" style="background-color: {{ ticket.cardcolor }}">
+                        <div class="title">{{ ticket.key }}</div>
+                        <div class="ticket-type">{{ ticket.typeName }}
+	                        <img class="ticket-img" src="{{ ticket.typeUrl }}"/>
+                        </div>
+                    </div>
+                    <div class="summary">
+                        <div class="summary-text">
+                            {{ ticket.summary }}
+                        </div>
+                        <pre class="description">
+                            {{ ticket.description }}
+                        </pre>
+                    </div>
+                    <div class="sidebar-container" style="border-left: 2px solid {{ ticket.cardcolor }}">
+                        <div class="sidebar-box" style="color: {{ ticket.cardcolor }}">
+                        <div class="sidebar-points">{{ ticket.storyPoints }}</div>
+                        {{ ticket.epic }}
+                        </div>
+                        <div class="dod-header" style="color: {{ ticket.cardcolor }}">DoD</div>
+                        <div class="dod-item">
+                            <div class="dod-box" style="border: 1px solid {{ ticket.cardcolor }}"></div>
+                            <div class="dod-text" style="color: {{ ticket.cardcolor }}">Verify</div>
+                        </div>
+                        <div class="dod-item">
+                            <div class="dod-box" style="border: 1px solid {{ ticket.cardcolor }}"></div>
+                            <div class="dod-text" style="color: {{ ticket.cardcolor }}">Tests</div>
+                        </div>
+                        <div class="dod-item">
+                            <div class="dod-box" style="border: 1px solid {{ ticket.cardcolor }}"></div>
+                            <div class="dod-text" style="color: {{ ticket.cardcolor }}">All Br.</div>
+                        </div>
+                        <div class="dod-item">
+                            <div class="dod-box" style="border: 1px solid {{ ticket.cardcolor }}"></div>
+                            <div class="dod-text" style="color: {{ ticket.cardcolor }}">Merged</div>
+                        </div>
+                        <div class="dod-item">
+                            <div class="dod-box" style="border: 1px solid {{ ticket.cardcolor }}"></div>
+                            <div class="dod-text" style="color: {{ ticket.cardcolor }}">Docs</div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
+

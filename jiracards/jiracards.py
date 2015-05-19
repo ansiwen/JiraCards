@@ -37,15 +37,11 @@ def getBoardIssues(jira_url, boardId, user="", password=""):
     else:
         r = requests.get(jira_url + BOARD_API + boardId, auth=HTTPBasicAuth(user, password))
     data = r.json()
-
     issues = []
     for rawIssue in data['issuesData']['issues']:
-        issue = Issue()
-        issue.key = rawIssue['key']
-        issue.summary = rawIssue['summary']
-        issue.typeName = rawIssue['typeName']
+        print rawIssue['key']
+        issue = getIssue(jira_url, rawIssue['key'], user, password)
         issues.append(issue)
-
     return issues
 
 def getIssues(jira_url, issues, user="", password=""):
@@ -64,6 +60,33 @@ def getIssue(jira_url, issue, user="", password=""):
     issue.key = data['key']
     issue.summary = data['fields']['summary']
     issue.typeName = data['fields']['issuetype']['name']
+    issue.typeUrl = data['fields']['issuetype']['iconUrl']
+    try:
+        issue.description = data['fields']['description']
+    except KeyError:
+        issue.description = ""
+    try:
+        issue.storyPoints = data['fields']['customfield_10142']
+        if issue.storyPoints:
+            if issue.storyPoints != 0.5:
+                issue.storyPoints = int(issue.storyPoints)
+        else:
+            issue.storyPoints = ""
+            
+    except KeyError:
+        issue.storyPoints = ""
+    try:
+        epic = data['fields']['customfield_10145']
+        if epic == None:
+            raise KeyError
+        if user == "":
+            r2 = requests.get(jira_url + ISSUE_API + epic)
+        else:
+            r2 = requests.get(jira_url + ISSUE_API + epic, auth=HTTPBasicAuth(user, password))
+        data2 = r2.json()
+        issue.epic = data2['fields']['customfield_10146']
+    except KeyError:
+        issue.epic = ""
     return issue
 
 def compileTemplate(tickets, template=""):
@@ -116,6 +139,7 @@ class Issue:
         self.summary = ""
         self.typeName = ""
         self.cardcolor = ""
+        self.storyPoints = ""
 
 
 # define an application base controller
