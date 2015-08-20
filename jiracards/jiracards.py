@@ -71,10 +71,10 @@ def getIssue(jira_url, issue, user="", password=""):
             if issue.storyPoints != 0.5:
                 issue.storyPoints = int(issue.storyPoints)
         else:
-            issue.storyPoints = ""
+            issue.storyPoints = "&nbsp;"
             
     except KeyError:
-        issue.storyPoints = ""
+        issue.storyPoints = "&nbsp;"
     try:
         epic = data['fields']['customfield_10145']
         if epic == None:
